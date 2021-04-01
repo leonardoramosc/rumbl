@@ -1,5 +1,6 @@
 defmodule Rumbl.Auth do
   import Plug.Conn
+  import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
 
   def init(opts) do
     # Si en opts no esta presente un :repo, lanzar error
@@ -26,5 +27,24 @@ defmodule Rumbl.Auth do
     |> assign(:current_user, user)
     |> put_session(:user_id, user.id)
     |> configure_session(renew: true)
+  end
+
+  def login_by_username_and_pass(conn, user, pass, opts) do
+    repo = Keyword.fetch!(opts, :repo)
+    user = repo.get_by(Rumbl.User, username: user)
+
+    cond do
+      # si el usuario existe y la contraseña es correcta
+      user && checkpw(pass, user.password_hash) ->
+        {:ok, login(conn, user)}
+      # si el usuario existe pero la contraseña no es correcta
+      user ->
+        {:error, :unauthorized, conn}
+      # si el usuario no existe, dummy_checkpw() simula el chequeo de contraseña
+      # como lo haria checkpw, esto ayuda para los timings attacks.
+      true ->
+        dummy_checkpw()
+        {:error, :not_found, conn}
+    end
   end
 end
