@@ -9,6 +9,20 @@
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
   <body>
+    <div class="header">
+      <ol class="container">
+        <%= if @current_user do %>
+          <li> <%= @current_user.username %> </li>
+          <li>
+            <%= link "Log out", to: Routes.session_path(@conn, :delete, @current_user),
+              method: "delete" %>
+          </li>
+        <% else %>
+          <li> <%= link "Register", to: Routes.user_path(@conn, :new) %> </li>
+          <li> <%= link "Log in", to: Routes.session_path(@conn, :new) %> </li>
+        <% end %>
+      </ol>
+    </div>
     <header>
       <section class="container">
         <nav role="navigation">

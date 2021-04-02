@@ -99,3 +99,25 @@ header nav a {
     margin: 2rem 1rem;
   }
 }
+
+/*********************************************************************************************/
+.text-right {
+  text-align: right;
+}
+
+.header {
+  background-color: #eee
+}
+
+.header > ol {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 10px 2.0rem;
+}
+
+.header > ol > li {
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 0;
+}
