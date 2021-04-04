@@ -7,6 +7,7 @@ defmodule Rumbl.Videos do
   alias Rumbl.Repo
 
   alias Rumbl.Videos.Video
+  alias Rumbl.Videos.Category
   alias Rumbl.Users.User
 
   @doc """
@@ -118,4 +119,17 @@ defmodule Rumbl.Videos do
   def list_user_videos(%User{} = user), do: Repo.all(user_videos(user))
 
   def get_user_video!(user, video_id), do: Repo.get!(user_videos(user), video_id)
+
+  # CATEGORIES
+  def categories_alphabetical(query) do
+    from c in query, order_by: c.name
+  end
+
+  def categories_names_and_ids(query) do
+    from c in query, select: { c.name, c.id }
+  end
+
+  def list_categories(query) do
+    Repo.all(query)
+  end
 end
