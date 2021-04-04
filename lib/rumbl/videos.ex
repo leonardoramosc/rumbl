@@ -7,6 +7,7 @@ defmodule Rumbl.Videos do
   alias Rumbl.Repo
 
   alias Rumbl.Videos.Video
+  alias Rumbl.Users.User
 
   @doc """
   Returns the list of videos.
@@ -49,10 +50,14 @@ defmodule Rumbl.Videos do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_video(attrs \\ %{}) do
-    %Video{}
+  def create_video(user, attrs \\ %{}) do
+    user
+    |> Ecto.build_assoc(:videos)
     |> Video.changeset(attrs)
     |> Repo.insert()
+    # %Video{}
+    # |> Video.changeset(attrs)
+    # |> Repo.insert()
   end
 
   @doc """
@@ -101,4 +106,16 @@ defmodule Rumbl.Videos do
   def change_video(%Video{} = video, attrs \\ %{}) do
     Video.changeset(video, attrs)
   end
+
+  def create_changeset(user, attrs \\ %{}) do
+    user
+    |> Ecto.build_assoc(:videos)
+    |> Video.changeset(attrs)
+  end
+
+  def user_videos(user), do: Ecto.assoc(user, :videos)
+
+  def list_user_videos(%User{} = user), do: Repo.all(user_videos(user))
+
+  def get_user_video!(user, video_id), do: Repo.get!(user_videos(user), video_id)
 end

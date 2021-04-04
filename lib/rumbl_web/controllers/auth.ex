@@ -18,7 +18,7 @@ defmodule RumblWeb.Auth do
     user_id = get_session(conn, :user_id)
     # si hay un usuario con sesion iniciada, obtener ese usuario de la DB
     # (al iniciar sesion, el id del usuario se guarda en la sesion)
-    user = user_id && repo.get(Rumbl.User, user_id)
+    user = user_id && repo.get(Rumbl.Users.User, user_id)
     # assign asigna al objeto conn.assigns la llave y el valor especificados
     # de esta forma, el usuario obtenido de la DB estara presente en conn.assigns
     # en toda la app y podra ser usado en todas las vistas y controladores.
@@ -34,7 +34,7 @@ defmodule RumblWeb.Auth do
 
   def login_by_username_and_pass(conn, user, pass, opts) do
     repo = Keyword.fetch!(opts, :repo)
-    user = repo.get_by(Rumbl.User, username: user)
+    user = repo.get_by(Rumbl.Users.User, username: user)
 
     cond do
       # si el usuario existe y la contraseña es correcta

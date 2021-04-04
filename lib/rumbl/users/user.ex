@@ -1,7 +1,7 @@
-defmodule Rumbl.User do
-  use Rumbl, :model
+defmodule Rumbl.Users.User do
+  use Ecto.Schema
   import Ecto.Changeset
-  import Comeonin
+  # import Comeonin
 
   schema "users" do
     field :name, :string
@@ -9,16 +9,19 @@ defmodule Rumbl.User do
     field :password, :string, virtual: true
     field :password_hash, :string
 
+    has_many :videos, Rumbl.Videos.Video
+
     timestamps()
   end
 
+  @doc false
   def changeset(user, params \\ %{}) do
     user
     |> cast(params, [:name, :username])
     |> validate_length(:username, min: 1, max: 20)
   end
 
-  # este changeset sirve para aplicr validacion al username haciendo uso de la funcion changeset
+    # este changeset sirve para aplicr validacion al username haciendo uso de la funcion changeset
   # ademas, esta funcion agrega un :password_hash al changeset, el cual es una contrseña encriptada
   def registration_changeset(user, params) do
     user
