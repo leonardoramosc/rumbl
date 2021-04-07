@@ -7,7 +7,7 @@ use Mix.Config
 # Run `mix help test` for more information.
 config :rumbl, Rumbl.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "12345",
   database: "rumbl_test#{System.get_env("MIX_TEST_PARTITION")}",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
