@@ -16,18 +16,26 @@ defmodule RumblWeb.Auth do
   #(keyword.fetch retorna el valor de la key solicitada).
   def call(conn, repo) do
     user_id = get_session(conn, :user_id)
+
+    cond do
+      user = conn.assigns[:current_user] ->
+        put_current_user(conn, user)
+      user = user_id && repo.get(Rumbl.Users.User, user_id) ->
+        put_current_user(conn, user)
+      true ->
+        assign(conn, :current_user, nil)
+    end
     # si hay un usuario con sesion iniciada, obtener ese usuario de la DB
     # (al iniciar sesion, el id del usuario se guarda en la sesion)
-    user = user_id && repo.get(Rumbl.Users.User, user_id)
+
     # assign asigna al objeto conn.assigns la llave y el valor especificados
     # de esta forma, el usuario obtenido de la DB estara presente en conn.assigns
     # en toda la app y podra ser usado en todas las vistas y controladores.
-    assign(conn, :current_user, user)
   end
 
   def login(conn, user) do
     conn
-    |> assign(:current_user, user)
+    |> put_current_user(user)
     |> put_session(:user_id, user.id)
     |> configure_session(renew: true)
   end
@@ -64,5 +72,13 @@ defmodule RumblWeb.Auth do
       |> redirect(to: Helpers.page_path(conn, :index))
       |> halt()
     end
+  end
+
+  defp put_current_user(conn, user) do
+    token = Phoenix.Token.sign(conn, "user socket", user.id)
+
+    conn
+    |> assign(:current_user, user)
+    |> assign(:user_token, token)
   end
 end
