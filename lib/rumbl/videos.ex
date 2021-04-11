@@ -57,6 +57,7 @@ defmodule Rumbl.Videos do
     |> Ecto.build_assoc(:videos)
     |> Video.changeset(attrs)
     |> Repo.insert()
+
     # %Video{}
     # |> Video.changeset(attrs)
     # |> Repo.insert()
@@ -127,16 +128,16 @@ defmodule Rumbl.Videos do
   end
 
   def categories_names_and_ids(query) do
-    from c in query, select: { c.name, c.id }
+    from c in query, select: {c.name, c.id}
   end
 
   def list_categories(query) do
     Repo.all(query)
   end
 
-  ####################################################################################################3
+  #################################################################################################### 3
   # ANNOTATIONS
-  ####################################################################################################3
+  #################################################################################################### 3
   def create_annotation_changeset(%User{} = user, socket, params) do
     user
     |> Ecto.build_assoc(:annotations, video_id: socket.assigns.video_id)
@@ -145,5 +146,14 @@ defmodule Rumbl.Videos do
 
   def create_annotation(changeset) do
     Repo.insert(changeset)
+  end
+
+  def list_annotations_of_video(video, limit) do
+    Repo.all(
+      from a in Ecto.assoc(video, :annotations),
+      order_by: [asc: a.at, asc: a.id],
+      limit: ^limit,
+      preload: [:user]
+    )
   end
 end
