@@ -10,6 +10,7 @@ defmodule Rumbl.Users.User do
     field :password_hash, :string
 
     has_many :videos, Rumbl.Videos.Video
+    has_many :annotations, Rumbl.Videos.Annotation
 
     timestamps()
   end

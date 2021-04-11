@@ -12,6 +12,7 @@ defmodule Rumbl.Videos.Video do
     field :user_id, :id
 
     belongs_to :category, Rumbl.Videos.Category
+    has_many :annotations, Rumbl.Videos.Annotation
 
     timestamps()
   end

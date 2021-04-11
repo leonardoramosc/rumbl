@@ -8,6 +8,7 @@ defmodule Rumbl.Videos do
 
   alias Rumbl.Videos.Video
   alias Rumbl.Videos.Category
+  alias Rumbl.Videos.Annotation
   alias Rumbl.Users.User
 
   @doc """
@@ -131,5 +132,18 @@ defmodule Rumbl.Videos do
 
   def list_categories(query) do
     Repo.all(query)
+  end
+
+  ####################################################################################################3
+  # ANNOTATIONS
+  ####################################################################################################3
+  def create_annotation_changeset(%User{} = user, socket, params) do
+    user
+    |> Ecto.build_assoc(:annotations, video_id: socket.assigns.video_id)
+    |> Annotation.changeset(params)
+  end
+
+  def create_annotation(changeset) do
+    Repo.insert(changeset)
   end
 end
