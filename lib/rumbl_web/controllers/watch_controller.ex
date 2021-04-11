@@ -4,6 +4,9 @@ defmodule RumblWeb.WatchController do
   alias Rumbl.Videos.Video
 
   def show(conn, %{"id" => id}) do
+    IO.puts("+++++++++++++++++++++++++++++++++++++")
+    IO.inspect(id)
+    IO.puts("+++++++++++++++++++++++++++++++++++++")
     video = Videos.get_video!(id)
     render conn, "show.html", video: video
   end
