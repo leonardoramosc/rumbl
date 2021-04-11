@@ -10,17 +10,20 @@ import "../css/app.scss"
 // Import deps with the dep name or local files with a relative path, for example:
 //
 //     import {Socket} from "phoenix"
-//     import socket from "./socket"
-//
+import socket from "./socket"
 import "phoenix_html"
+import Video from './video';
 
-import Player from './player';
+Video.init(socket, document.getElementById("video"))
 
-let video = document.getElementById('video');
+// import Player from './player';
 
-if (video) {
-  Player.init(video.id, video.getAttribute("data-player-id"), () => {
-    console.log("Player ready!!");
-    console.log(video.getAttribute("data-player-id"))
-  })
-}
+// let video = document.getElementById('video');
+
+// if (video) {
+//   Player.init(video.id, video.getAttribute("data-player-id"), () => {
+//     console.log("Player ready!!");
+//     console.log(video.getAttribute("data-player-id"))
+//   })
+// }
+
