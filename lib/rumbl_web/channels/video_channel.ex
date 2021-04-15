@@ -4,10 +4,15 @@ defmodule RumblWeb.VideoChannel do
   alias Rumbl.Videos
   alias Rumbl.Users
 
-  def join("videos:" <> video_id, _params, socket) do
+  def join("videos:" <> video_id, params, socket) do
     video_id = String.to_integer(video_id)
     video = Videos.get_video!(video_id)
-    annotations = Videos.list_annotations_of_video(video, 200)
+    # Obtener el id de la ultima anotacion (si existe)
+    last_seen_id = params["last_seen_id"] || 0
+    IO.puts("++++++++++++++++++++++++++++++")
+    IO.inspect(params)
+    IO.puts("++++++++++++++++++++++++++++++")
+    annotations = Videos.list_annotations_of_video(video, 200, last_seen_id)
 
     resp = %{annotations: Phoenix.View.render_many(
       annotations,

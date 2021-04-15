@@ -29,6 +29,10 @@ let Video = {
 
     videoChannel.join()
       .receive("ok", resp => {
+        const annotationsIDs = resp.annotations.map(a => a.id);
+        if (annotationsIDs.length > 0) {
+          videoChannel.params['last_seen_id'] = Math.max(...annotationsIDs);
+        }
         this.scheduleMessages(msgContainer, resp.annotations)
         msgContainer.addEventListener('click', e => {
           e.preventDefault();
@@ -42,6 +46,10 @@ let Video = {
       .receive("error", reason => console.log(`join failed`, reason) )
     
     videoChannel.on("new_annotation", resp => {
+      // cada vez qe se reciba una nueva anotacion, asignar al objeto parametros,
+      // el id de esa notacion, la cual seria la ultima. Esto se hace, para que en caso 
+      // de que haya una desconexion, el servidor sepa a partir de cual id debe enviar la data
+      videoChannel.params['last_seen_id'] = resp.id
       this.renderAnnotation(msgContainer, resp)
     });
   },

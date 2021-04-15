@@ -148,11 +148,14 @@ defmodule Rumbl.Videos do
     Repo.insert(changeset)
   end
 
-  def list_annotations_of_video(video, limit) do
+  def list_annotations_of_video(video, limit, last_seen_id) do
     Repo.all(
       from a in Ecto.assoc(video, :annotations),
       order_by: [asc: a.at, asc: a.id],
       limit: ^limit,
+      # Obtener todas las anotaciones cuyo id este despues del last_seen_id
+      # para evitar enviar al cliente las anotaciones que ya esten renderizadas.
+      where: a.id > ^last_seen_id,
       preload: [:user]
     )
   end
